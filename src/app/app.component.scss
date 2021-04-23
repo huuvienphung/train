@@ -1,0 +1,13 @@
+.border-dashed {
+  //   border: 1px dashed rgba($color: #000000, $alpha: 0.2);
+  height: 100%;
+}
+.position-relative {
+  position: relative;
+  overflow-y: scroll;
+  height: calc(100vh - 16px);
+}
+.position-sticky {
+  position: sticky;
+  top: 0;
+}

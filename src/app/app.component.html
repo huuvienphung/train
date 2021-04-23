@@ -1,0 +1,9 @@
+<div class="p-grid position-relative">
+  <div class="p-col-2 position-sticky border-dashed">
+    <p-panelMenu [model]="items"></p-panelMenu>
+  </div>
+  <div class="p-col-10 border-dashed">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+<p-toast></p-toast>
