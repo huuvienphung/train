@@ -23,7 +23,6 @@ export class ListProductComponent implements OnInit {
     this.productService.deleleProduct(id); // xóa trong service
   }
   viewProduct(id: string) {
-    console.log(id);
     this.router.navigate(['/view/' + id]);
   }
 }

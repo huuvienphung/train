@@ -13,7 +13,13 @@ export class ProductService {
     new Product('name4444444', 2000, 'cc2', 4),
   ];
 
-  constructor() {}
+  constructor() {
+    if (localStorage.getItem('products') === null) {
+      this.addLocalSorage();
+    } else {
+      this.products = JSON.parse(localStorage.getItem('products'));
+    }
+  }
 
   // getAll
   getProducts(): Observable<IProduct[]> {
@@ -26,12 +32,14 @@ export class ProductService {
   // add item
   addProduct(item: Product) {
     this.products.push(item);
+    this.addLocalSorage();
   }
   // delete item
   deleleProduct(id: string) {
     const index = this.foundIndex(id);
     if (index == -1) return;
     this.products.splice(index, 1);
+    this.addLocalSorage();
   }
   // update item
   updateProduct(id: string, updateFields: IProduct) {
@@ -39,10 +47,14 @@ export class ProductService {
     // Object.assign(note, updateFields);
     // console.log(note);
     this.products.splice(this.foundIndex(id), 1, updateFields);
+    this.addLocalSorage();
   }
 
   foundIndex(id: string): number {
     const index = this.products.findIndex((p) => p.id === id);
     return index;
+  }
+  addLocalSorage() {
+    localStorage.setItem('products', JSON.stringify(this.products));
   }
 }
