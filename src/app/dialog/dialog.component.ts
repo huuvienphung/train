@@ -17,7 +17,8 @@ export class DialogComponent implements OnInit {
   constructor(
     private primengConfig: PrimeNGConfig,
     private productService: ProductService,
-    private readonly fb: FormBuilder
+    private fb: FormBuilder,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -65,6 +66,7 @@ export class DialogComponent implements OnInit {
     }
     this.cleanForm();
     this.show = false; // show => false đóng dinalog
+    this.showSuccess();
   }
   // khi thực hiện save với new item
   add() {
@@ -81,6 +83,7 @@ export class DialogComponent implements OnInit {
   cancel() {
     this.show = false;
     this.cleanForm();
+    this.showCustom();
   }
   // set lại rỗng cho form
   cleanForm() {
@@ -90,6 +93,21 @@ export class DialogComponent implements OnInit {
       price: 0,
       quantity: 1,
       description: '',
+    });
+  }
+  showSuccess() {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: 'Thêm thành công',
+    });
+  }
+  showCustom() {
+    this.messageService.add({
+      severity: 'custom',
+      summary: 'Cancel',
+      detail: 'Đã cancel form',
+      icon: 'pi-file',
     });
   }
 }
