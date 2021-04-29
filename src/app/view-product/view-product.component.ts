@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { pluck } from 'rxjs/operators';
@@ -25,18 +25,6 @@ export class ViewProductComponent implements OnInit {
     // this.route.paramMap.subscribe((res) => console.log(res));
     // console.log(this.route.snapshot.params);
     // console.log(this.route.snapshot.paramMap);
-    this.addForm = this.fb.group({
-      name: [
-        '',
-        Validators.compose([
-          Validators.required,
-          Validators.pattern(/^[a-z]{6,32}$/i),
-        ]),
-      ],
-      price: [0, Validators.required],
-      description: ['', Validators.required],
-      quantity: [0, Validators.required],
-    });
     let id: string;
     this.route.params.pipe(pluck('id')).subscribe((res) => {
       id = res;

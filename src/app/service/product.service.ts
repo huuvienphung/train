@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { IProduct, Product } from '../model/product.model';
+import { IProduct, Product, Quantity } from '../model/product.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
   products: Product[] = [
-    new Product('name11111', 1000, 'cc1', 1),
-    new Product('name22222222', 2000, 'cc2', 2),
-    new Product('name33333', 2000, 'cc2', 3),
-    new Product('name4444444', 2000, 'cc2', 4),
+    new Product('name11111', 1000, 'cc1', new Quantity(0, 2, 2)),
+    new Product('name22222222', 2000, 'cc2', new Quantity(0, 3, 3)),
+    new Product('name33333', 2000, 'cc2', new Quantity(0, 4, 4)),
+    new Product('name4444444', 2000, 'cc2', new Quantity(0, 5, 5)),
   ];
 
   constructor() {
@@ -42,18 +42,19 @@ export class ProductService {
     this.addLocalSorage();
   }
   // update item
-  updateProduct(id: string, updateFields: IProduct) {
+  updateProduct(updateFields: IProduct) {
     // const note = this.getProduct(id);
     // Object.assign(note, updateFields);
     // console.log(note);
-    this.products.splice(this.foundIndex(id), 1, updateFields);
+    this.products.splice(this.foundIndex(updateFields.id), 1, updateFields);
     this.addLocalSorage();
   }
-
+  // tìm vị trí
   foundIndex(id: string): number {
     const index = this.products.findIndex((p) => p.id === id);
     return index;
   }
+  //add localstorage
   addLocalSorage() {
     localStorage.setItem('products', JSON.stringify(this.products));
   }

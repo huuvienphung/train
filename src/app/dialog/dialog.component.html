@@ -6,9 +6,13 @@
   ></p-button>
 </div>
 <p-dialog
-  header="Create"
+  [header]="addForm.value.id ? 'Update ' + addForm.value.name + '' : 'Create'"
+  [closable]="false"
   [(visible)]="show"
-  [style]="{ width: '60vw' }"
+  blockScroll="true"
+  closeOnEscape="true"
+  modal="true"
+  [style]="{ width: '70vw' }"
   [baseZIndex]="10000"
 >
   <form [formGroup]="addForm" (ngSubmit)="onSubmit()" autocomplete="off">
@@ -22,26 +26,27 @@
       </div>
       <div class="p-field p-col-12 p-md-6">
         <span class="p-float-label">
-          <input
+          <p-inputNumber
             type="number"
-            id="inputPrice"
-            pInputText
-            min="1000"
+            min="0"
             formControlName="price"
-          />
+            mode="currency"
+            currency="VND"
+          ></p-inputNumber>
           <label for="inputPrice">Fill Giá</label>
         </span>
         <p>{{ addForm.get("price")?.errors | json }}</p>
       </div>
       <div class="p-field p-col-12 p-md-6">
         <span class="p-float-label">
-          <input
-            type="number"
-            id="inputQuan"
-            pInputText
-            formControlName="quantity"
-            min="0"
-          />
+          <p-inputNumber
+            mode="decimal"
+            [showButtons]="true"
+            formControlName="quantityProduct"
+            decrementButtonClass="p-button"
+            incrementButtonClass="p-button"
+            :min="0"
+          ></p-inputNumber>
           <label for="inputQuan">Fill Số lượng</label>
         </span>
       </div>

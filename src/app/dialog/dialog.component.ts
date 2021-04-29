@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
-import { IProduct, Product } from '../model/product.model';
+import { IProduct, Product, Quantity } from '../model/product.model';
 import { ProductService } from '../service/product.service';
 
 @Component({
@@ -15,9 +15,9 @@ export class DialogComponent implements OnInit {
   addForm: FormGroup;
 
   constructor(
-    private primengConfig: PrimeNGConfig,
     private productService: ProductService,
     private fb: FormBuilder,
+    private primengConfig: PrimeNGConfig,
     private messageService: MessageService
   ) {}
 
@@ -33,8 +33,10 @@ export class DialogComponent implements OnInit {
         ]),
       ],
       price: [0, Validators.required],
-      description: ['', Validators.required],
-      quantity: [0, Validators.required],
+      description: [''],
+      quantityCard: [0],
+      quantityProduct: [0, Validators.required],
+      quantityTotal: [0],
     });
   }
 
@@ -49,7 +51,9 @@ export class DialogComponent implements OnInit {
         name: product.name,
         price: product.price,
         description: product.description,
-        quantity: product.quantity,
+        quantityCard: product.quantity.card,
+        quantityProduct: product.quantity.product,
+        quantityTotal: product.quantity.total,
       });
     }
   }
@@ -57,10 +61,21 @@ export class DialogComponent implements OnInit {
   // submit form
   onSubmit() {
     if (this.addForm.value.id) {
-      this.productService.updateProduct(
-        this.addForm.value.id,
-        this.addForm.value
-      );
+      const item = {
+        id: this.addForm.value.id,
+        name: this.addForm.value.name,
+        price: this.addForm.value.price,
+        description: this.addForm.value.description,
+        quantity: {
+          card: this.addForm.value.quantityCard,
+          product: this.addForm.value.quantityProduct,
+          total:
+            this.addForm.value.quantityCard +
+            this.addForm.value.quantityProduct,
+        },
+      };
+
+      this.productService.updateProduct(item);
     } else {
       this.add();
     }
@@ -74,7 +89,11 @@ export class DialogComponent implements OnInit {
       this.addForm.value.name,
       this.addForm.value.price,
       this.addForm.value.description,
-      this.addForm.value.quantity
+      new Quantity(
+        0,
+        this.addForm.value.quantityProduct,
+        this.addForm.value.quantityProduct
+      )
     );
 
     this.productService.addProduct(item); // add new item vào service
@@ -83,7 +102,6 @@ export class DialogComponent implements OnInit {
   cancel() {
     this.show = false;
     this.cleanForm();
-    this.showCustom();
   }
   // set lại rỗng cho form
   cleanForm() {

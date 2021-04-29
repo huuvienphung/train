@@ -29,6 +29,9 @@ export class AppComponent {
       {
         label: 'Card',
         icon: 'pi pi-pw pi-shopping-cart',
+        command: () => {
+          this.router.navigate(['list-card']);
+        },
       },
     ];
   }

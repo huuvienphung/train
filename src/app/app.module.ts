@@ -7,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { MenuModule } from 'primeng/menu';
@@ -16,8 +17,11 @@ import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { DialogCardComponent } from './dialog-card/dialog-card.component';
 import { DialogComponent } from './dialog/dialog.component';
+import { ListCardComponent } from './list-card/list-card.component';
 import { ListProductComponent } from './list-product/list-product.component';
+import { ViewCardComponent } from './view-card/view-card.component';
 import { ViewProductComponent } from './view-product/view-product.component';
 
 @NgModule({
@@ -26,6 +30,9 @@ import { ViewProductComponent } from './view-product/view-product.component';
     ListProductComponent,
     DialogComponent,
     ViewProductComponent,
+    ListCardComponent,
+    ViewCardComponent,
+    DialogCardComponent,
   ],
   imports: [
     BrowserModule,
@@ -45,6 +52,7 @@ import { ViewProductComponent } from './view-product/view-product.component';
     ReactiveFormsModule,
     CardModule,
     ConfirmDialogModule,
+    InputNumberModule,
   ],
   providers: [AppComponent],
   bootstrap: [AppComponent],
