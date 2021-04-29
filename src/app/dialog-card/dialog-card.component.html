@@ -100,7 +100,6 @@
               <td>{{ product.price | currency: "VND" }}</td>
               <td>
                 <p-inputNumber
-                  inputId="minmax-buttons"
                   (onInput)="changeQuantity($event, product)"
                   suffix="/{{ product.quantity.total }}"
                   ngModel="{{

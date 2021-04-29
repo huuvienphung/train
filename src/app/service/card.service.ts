@@ -42,7 +42,10 @@ export class CardService {
     return of(this.cards.find((c) => c.id === id));
   }
   addCard(card: ICard) {
-    this.cards.push(card);
+    let newOrder = Object.assign(card, { order: [...this.smallCard] });
+    this.cards.push(newOrder);
+    this.removeAll();
+    this.addLocalSorage();
   }
   deleteCard(id: string) {
     let index = this.findIndexcard(id, this.cards);
@@ -71,12 +74,12 @@ export class CardService {
   updateSmallCard(index: number, c: IProduct) {
     this.smallCard.splice(index, 1, c);
   }
+  // các hàm xử lý
   removeAll() {
     while (this.smallCard.length) {
       this.smallCard.pop();
     }
   }
-  // các hàm xử lý
   findIndexcard(id: string, parent: any): number {
     return parent.findIndex((c) => c.id === id);
   }

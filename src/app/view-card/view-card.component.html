@@ -16,6 +16,7 @@
               <th>Tên Sản phẩm</th>
               <th>Số lượng</th>
               <th>giá 1/sp</th>
+              <th>thành tiền</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-order>
@@ -23,11 +24,12 @@
               <td>{{ order.name }}</td>
               <td>{{ order.quantity.card }}</td>
               <td>{{ order.price | currency: "VND" }}</td>
+              <td>{{ order.price * order.quantity.card | currency: "VND" }}</td>
             </tr>
           </ng-template>
           <ng-template pTemplate="footer">
             <tr>
-              <td colspan="2" class="p-text-right">Totals</td>
+              <td colspan="3" class="p-text-right">Totals</td>
               <td>{{ total$ | async | currency: "VND" }}</td>
             </tr>
           </ng-template>

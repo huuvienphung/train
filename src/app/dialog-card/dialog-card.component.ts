@@ -1,8 +1,17 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { fromEvent, Observable, of } from 'rxjs';
 import { debounceTime, map, pluck, reduce, switchMap } from 'rxjs/operators';
+import { Card } from '../model/card.model';
 import { IProduct } from '../model/product.model';
 import { CardService } from '../service/card.service';
 import { ProductService } from '../service/product.service';
@@ -14,7 +23,9 @@ import { ProductService } from '../service/product.service';
   providers: [MessageService],
 })
 export class DialogCardComponent implements OnInit {
-  show: boolean;
+  @Input() show: boolean;
+  @Output() change = new EventEmitter<boolean>();
+
   addForm: FormGroup;
   products$: Observable<IProduct[]>;
   productsCard$: Observable<IProduct[]>;
@@ -51,22 +62,44 @@ export class DialogCardComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('submit');
+    let newCard = new Card(
+      this.addForm.value.nameOrder,
+      this.addForm.value.nameCustomer,
+      this.addForm.value.phoneNumber,
+      []
+    );
+    // this.cardService.getSmallCards().subscribe((res) => {
+    //   console.log(newCard);
+    //   this.cardService.addCard(newCard);
+    // });
+    this.cardService.addCard(newCard);
+
+    this.addForm.patchValue({
+      nameOrder: ' ',
+      nameCustomer: ' ',
+      phoneNumber: ' ',
+    });
+    this.change.emit(!this.show);
   }
   showDialog(id: string) {
     this.show = true;
   }
   cancel() {
-    this.show = false;
+    // this.show = false;
+    this.change.emit(!this.show);
     this.cardService.removeAll();
+    this.addForm.patchValue({
+      nameOrder: ' ',
+      nameCustomer: ' ',
+      phoneNumber: ' ',
+    });
+    this.total$ = this.total();
   }
   delete(id: string) {
     this.cardService.deleteSmallCard(id);
     this.total$ = this.total();
   }
   changeQuantity(event, product: IProduct) {
-    console.log(event.value);
-
     let x: number = event.value;
     // nếu số lượng nhỏ hơn 1 sẽ tính 1
     if (event.value < 1) {
@@ -78,7 +111,6 @@ export class DialogCardComponent implements OnInit {
     }
     this.cardService.getSmallCards().subscribe((res) => {
       let index = res.findIndex((car) => car.id === product.id);
-      console.log('index: ' + index);
 
       product.quantity.card = x;
       this.cardService.updateSmallCard(index, product);

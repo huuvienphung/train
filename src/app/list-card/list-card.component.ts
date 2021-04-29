@@ -16,6 +16,7 @@ import { CardService } from '../service/card.service';
   providers: [MessageService, ConfirmationService],
 })
 export class ListCardComponent implements OnInit {
+  show: boolean;
   listCards$: Observable<ICard[]>;
 
   constructor(
@@ -30,6 +31,9 @@ export class ListCardComponent implements OnInit {
   }
   viewCard(id: string): void {
     this.router.navigate(['view-card/' + id]);
+  }
+  onChange(val) {
+    this.show = val;
   }
   delete(id: string): void {
     this.confirmationService.confirm({
@@ -66,6 +70,6 @@ export class ListCardComponent implements OnInit {
     });
   }
   update(): void {
-    console.log('update');
+    this.show = true;
   }
 }
