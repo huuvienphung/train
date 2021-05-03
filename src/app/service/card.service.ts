@@ -34,6 +34,9 @@ export class CardService {
       this.cards = JSON.parse(localStorage.getItem('cards'));
     }
   }
+  showSmall() {
+    console.log(this.smallCard);
+  }
   // xử lý với card
   getCards(): Observable<ICard[]> {
     return of(this.cards);

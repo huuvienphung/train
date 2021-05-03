@@ -20,6 +20,9 @@ export class ProductService {
       this.products = JSON.parse(localStorage.getItem('products'));
     }
   }
+  show() {
+    console.log(this.products);
+  }
 
   // getAll
   getProducts(): Observable<IProduct[]> {

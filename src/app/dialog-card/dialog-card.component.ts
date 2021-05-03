@@ -1,10 +1,19 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { fromEvent, Observable, of } from 'rxjs';
-import { debounceTime, map, pluck, reduce, switchMap } from 'rxjs/operators';
+import { fromEvent, merge, Observable, of } from 'rxjs';
+import {
+  debounceTime,
+  filter,
+  map,
+  pluck,
+  reduce,
+  switchMap,
+  tap,
+  toArray,
+} from 'rxjs/operators';
 import { Card } from '../model/card.model';
-import { IProduct, Quantity } from '../model/product.model';
+import { IProduct, IQuantity, Quantity } from '../model/product.model';
 import { CardService } from '../service/card.service';
 import { ProductService } from '../service/product.service';
 
@@ -53,7 +62,6 @@ export class DialogCardComponent implements OnInit {
         map((val: string) => this.filterName(val))
       )
       .subscribe((res) => (this.products$ = of(res)));
-    this.updateQuantity();
   }
 
   onSubmit() {
@@ -131,6 +139,7 @@ export class DialogCardComponent implements OnInit {
     product.quantity.card = x;
     product.quantity.product = product.quantity.total - x;
     this.total$ = this.total();
+
     // this.cardService
     //   .getSmallCards()
     //   .pipe(
@@ -204,10 +213,37 @@ export class DialogCardComponent implements OnInit {
   }
 
   updateQuantity(): void {
-    let x: IProduct[];
-    this.cardService.getSmallCards().subscribe((res) => (x = [...res]));
-    console.log(x);
+    this.productService
+      .getProducts()
+      .pipe(
+        switchMap((val) => val),
+        tap((val) => {
+          if (this.filterId(val) != undefined) {
+            val.quantity = this.filterId(val);
+          } else {
+            val.quantity = val.quantity;
+          }
+        }),
+        toArray()
+      )
+      .subscribe();
+  }
 
-    this.productService.getProducts().subscribe((res) => console.log(res));
+  filterId(obj: IProduct): IQuantity {
+    let k: IQuantity;
+    merge(
+      this.cardService.getSmallCards().pipe(
+        switchMap((val) => val),
+        filter((val: IProduct) => val.id === obj.id)
+      )
+    ).subscribe(
+      (res) =>
+        (k = new Quantity(
+          obj.quantity.card + res.quantity.card,
+          obj.quantity.total - (obj.quantity.card + res.quantity.card),
+          obj.quantity.total
+        ))
+    );
+    return k;
   }
 }
