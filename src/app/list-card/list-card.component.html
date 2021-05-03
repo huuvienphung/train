@@ -1,4 +1,4 @@
-<app-dialog-card></app-dialog-card>
+<app-dialog-card #show></app-dialog-card>
 <div *ngIf="listCards$ | async as listCards">
   <p-table [value]="listCards" styleClass="p-datatable-gridlines">
     <ng-template pTemplate="header">
@@ -37,7 +37,7 @@
               pRipple
               icon="pi pi-pencil"
               class="p-button-warning p-button-sm"
-              (click)="update()"
+              (click)="show.showDialog(card.id)"
             ></button>
           </span>
         </td>

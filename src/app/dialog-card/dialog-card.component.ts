@@ -1,18 +1,10 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { fromEvent, Observable, of } from 'rxjs';
 import { debounceTime, map, pluck, reduce, switchMap } from 'rxjs/operators';
 import { Card } from '../model/card.model';
-import { IProduct } from '../model/product.model';
+import { IProduct, Quantity } from '../model/product.model';
 import { CardService } from '../service/card.service';
 import { ProductService } from '../service/product.service';
 
@@ -23,8 +15,7 @@ import { ProductService } from '../service/product.service';
   providers: [MessageService],
 })
 export class DialogCardComponent implements OnInit {
-  @Input() show: boolean;
-  @Output() change = new EventEmitter<boolean>();
+  show: boolean;
 
   addForm: FormGroup;
   products$: Observable<IProduct[]>;
@@ -40,6 +31,8 @@ export class DialogCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // console.log(this.ref);
+
     this.addForm = this.fb.group({
       id: [''],
       nameOrder: ['', Validators.required],
@@ -48,6 +41,7 @@ export class DialogCardComponent implements OnInit {
       phoneNumber: ['', Validators.required],
       order: [],
     });
+    // console.log(this.config);
 
     this.products$ = this.productService.getProducts();
     this.productsCard$ = this.cardService.getSmallCards();
@@ -59,39 +53,64 @@ export class DialogCardComponent implements OnInit {
         map((val: string) => this.filterName(val))
       )
       .subscribe((res) => (this.products$ = of(res)));
+    this.updateQuantity();
   }
 
   onSubmit() {
-    let newCard = new Card(
-      this.addForm.value.nameOrder,
-      this.addForm.value.nameCustomer,
-      this.addForm.value.phoneNumber,
-      []
-    );
-    // this.cardService.getSmallCards().subscribe((res) => {
-    //   console.log(newCard);
-    //   this.cardService.addCard(newCard);
-    // });
-    this.cardService.addCard(newCard);
-
+    if (this.addForm.value.id) {
+      let updateCard = {
+        id: this.addForm.value.id,
+        nameOrder: this.addForm.value.nameOrder,
+        date: this.addForm.value.date,
+        nameCustomer: this.addForm.value.nameCustomer,
+        phoneNumber: this.addForm.value.phoneNumber,
+        order: [],
+      };
+      this.updateQuantity();
+      this.cardService.updateCard(updateCard);
+    } else {
+      let newCard = new Card(
+        this.addForm.value.nameOrder,
+        this.addForm.value.nameCustomer,
+        this.addForm.value.phoneNumber,
+        []
+      );
+      this.updateQuantity();
+      this.cardService.addCard(newCard);
+    }
     this.addForm.patchValue({
-      nameOrder: ' ',
-      nameCustomer: ' ',
-      phoneNumber: ' ',
+      id: '',
+      nameOrder: '',
+      nameCustomer: '',
+      phoneNumber: '',
     });
-    this.change.emit(!this.show);
+    this.show = false;
+    this.total$ = this.total();
   }
   showDialog(id: string) {
     this.show = true;
+    if (id !== '1') {
+      let card;
+      this.cardService.getCard(id).subscribe((res) => (card = res));
+      this.addForm.patchValue({
+        id: card.id,
+        nameOrder: card.nameOrder,
+        date: new Date(),
+        nameCustomer: card.nameCustomer,
+        phoneNumber: card.phoneNumber,
+      });
+      this.cardService.setSmallCard(card.order);
+      this.total$ = this.total();
+    }
   }
   cancel() {
-    // this.show = false;
-    this.change.emit(!this.show);
+    this.show = false;
     this.cardService.removeAll();
     this.addForm.patchValue({
-      nameOrder: ' ',
-      nameCustomer: ' ',
-      phoneNumber: ' ',
+      id: '',
+      nameOrder: '',
+      nameCustomer: '',
+      phoneNumber: '',
     });
     this.total$ = this.total();
   }
@@ -109,13 +128,16 @@ export class DialogCardComponent implements OnInit {
     if (event.value > product.quantity.total) {
       x = product.quantity.total;
     }
-    this.cardService.getSmallCards().subscribe((res) => {
-      let index = res.findIndex((car) => car.id === product.id);
-
-      product.quantity.card = x;
-      this.cardService.updateSmallCard(index, product);
-    });
+    product.quantity.card = x;
+    product.quantity.product = product.quantity.total - x;
     this.total$ = this.total();
+    // this.cardService
+    //   .getSmallCards()
+    //   .pipe(
+    //     switchMap((x) => x),
+    //     map((x) => x.quantity)
+    //   )
+    //   .subscribe((res) => console.log(res));
   }
 
   filterName(value: string): IProduct[] {
@@ -132,20 +154,46 @@ export class DialogCardComponent implements OnInit {
     return x;
   }
   addCard(item: IProduct): void {
-    this.cardService.getSmallCards().subscribe((res) => {
-      // tìm vị trí
-      let index = res.findIndex((car) => car.id === item.id);
-      if (index > -1) {
-        // kiểm tra số sản phẩm trong card phải nhỏ hơn total
-        if (item.quantity.card < item.quantity.total) {
-          item.quantity.card++;
-          this.cardService.updateSmallCard(index, item);
+    let newItem = {
+      id: '',
+      name: '',
+      price: 0,
+      description: '',
+      quantity: new Quantity(0, 0, 0),
+    };
+    // kiểm tra số lượng sản phẩm còn lại có lớn hơn 0
+    if (item.quantity.product > 0) {
+      this.cardService.getSmallCards().subscribe((res) => {
+        // tìm vị trí để kiểm tra sản phẩm đã tồn tại trong card chưa
+        let index = res.findIndex((car) => car.id === item.id);
+
+        // check vị trí đã tồn tại trong mảng chưa
+        if (index > -1) {
+          newItem = res[index];
+          // kiểm tra số sản phẩm trong card phải nhỏ hơn total
+          if (newItem.quantity.card < newItem.quantity.total) {
+            newItem.quantity.card++;
+            this.cardService.updateSmallCard(index, newItem);
+          } else {
+            console.log('sản phẩm đã hết ');
+          }
+        } else {
+          newItem = {
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            description: item.description,
+            quantity: new Quantity(
+              item.quantity.card,
+              item.quantity.product,
+              item.quantity.total
+            ),
+          };
+          this.cardService.addSmallCard(newItem);
         }
-      } else {
-        this.cardService.addSmallCard(item);
-      }
-    });
-    this.total$ = this.total();
+      });
+      this.total$ = this.total();
+    }
   }
 
   total(): Observable<number> {
@@ -153,5 +201,13 @@ export class DialogCardComponent implements OnInit {
       switchMap((x) => x),
       reduce((acc, val) => acc + val.price * val.quantity.card, 0)
     );
+  }
+
+  updateQuantity(): void {
+    let x: IProduct[];
+    this.cardService.getSmallCards().subscribe((res) => (x = [...res]));
+    console.log(x);
+
+    this.productService.getProducts().subscribe((res) => console.log(res));
   }
 }

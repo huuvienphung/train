@@ -6,7 +6,7 @@
   ></p-button>
 </div>
 <p-dialog
-  [header]="addForm.value.id ? 'Update ' + addForm.value.name + '' : 'Create'"
+  [header]="addForm.value.id ? 'Update' : 'Create'"
   [closable]="false"
   [(visible)]="show"
   blockScroll="true"
@@ -22,20 +22,20 @@
           <input type="text" id="inputName" pInputText formControlName="name" />
           <label for="inputName">Fill Tên</label>
         </span>
-        <p>{{ addForm.get("name")?.errors | json }}</p>
+        <!-- <p>{{ addForm.get("name")?.errors | json }}</p> -->
       </div>
       <div class="p-field p-col-12 p-md-6">
         <span class="p-float-label">
           <p-inputNumber
             type="number"
-            min="0"
+            min="1000"
             formControlName="price"
             mode="currency"
             currency="VND"
           ></p-inputNumber>
-          <label for="inputPrice">Fill Giá</label>
+          <label for="inputPrice">Fill Giá > 1000</label>
         </span>
-        <p>{{ addForm.get("price")?.errors | json }}</p>
+        <!-- <p>{{ addForm.get("price")?.errors | json }}</p> -->
       </div>
       <div class="p-field p-col-12 p-md-6">
         <span class="p-float-label">
@@ -45,9 +45,9 @@
             formControlName="quantityProduct"
             decrementButtonClass="p-button"
             incrementButtonClass="p-button"
-            :min="0"
+            :min="1"
           ></p-inputNumber>
-          <label for="inputQuan">Fill Số lượng</label>
+          <label for="inputQuan">Fill Số lượng > 0</label>
         </span>
       </div>
       <div class="p-field p-col-12">
@@ -78,8 +78,8 @@
         ></p-button>
       </div>
     </div>
-    <pre>{{ addForm.value | json }}</pre>
-    <pre>{{ addForm.status }}</pre>
+    <!-- <pre>{{ addForm.value | json }}</pre> -->
+    <!-- <pre>{{ addForm.status }}</pre> -->
   </form>
 </p-dialog>
 <p-toast></p-toast>

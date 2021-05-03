@@ -32,10 +32,16 @@ export class DialogComponent implements OnInit {
           // Validators.pattern(/^[a-z]{6,32}$/i),
         ]),
       ],
-      price: [0, Validators.required],
+      price: [
+        1000,
+        Validators.compose([Validators.required, Validators.min(1000)]),
+      ],
       description: [''],
       quantityCard: [0],
-      quantityProduct: [0, Validators.required],
+      quantityProduct: [
+        1,
+        Validators.compose([Validators.required, Validators.min(1)]),
+      ],
       quantityTotal: [0],
     });
   }

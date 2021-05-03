@@ -7,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
+import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
@@ -53,6 +54,7 @@ import { ViewProductComponent } from './view-product/view-product.component';
     CardModule,
     ConfirmDialogModule,
     InputNumberModule,
+    DynamicDialogModule,
   ],
   providers: [AppComponent],
   bootstrap: [AppComponent],

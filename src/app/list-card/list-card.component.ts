@@ -5,6 +5,7 @@ import {
   ConfirmEventType,
   MessageService,
 } from 'primeng/api';
+import { DialogService } from 'primeng/dynamicdialog';
 import { Observable } from 'rxjs';
 import { ICard } from '../model/card.model';
 import { CardService } from '../service/card.service';
@@ -13,17 +14,17 @@ import { CardService } from '../service/card.service';
   selector: 'app-list-card',
   templateUrl: './list-card.component.html',
   styleUrls: ['./list-card.component.scss'],
-  providers: [MessageService, ConfirmationService],
+  providers: [MessageService, ConfirmationService, DialogService],
 })
 export class ListCardComponent implements OnInit {
-  show: boolean;
   listCards$: Observable<ICard[]>;
 
   constructor(
     private cardService: CardService,
     private router: Router,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    public dialogService: DialogService
   ) {}
 
   ngOnInit(): void {
@@ -32,9 +33,7 @@ export class ListCardComponent implements OnInit {
   viewCard(id: string): void {
     this.router.navigate(['view-card/' + id]);
   }
-  onChange(val) {
-    this.show = val;
-  }
+
   delete(id: string): void {
     this.confirmationService.confirm({
       message: 'Bạn có muốn xóa sản phẩm này không?',
@@ -68,8 +67,5 @@ export class ListCardComponent implements OnInit {
         }
       },
     });
-  }
-  update(): void {
-    this.show = true;
   }
 }

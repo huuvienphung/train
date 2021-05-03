@@ -43,9 +43,6 @@ export class ProductService {
   }
   // update item
   updateProduct(updateFields: IProduct) {
-    // const note = this.getProduct(id);
-    // Object.assign(note, updateFields);
-    // console.log(note);
     this.products.splice(this.foundIndex(updateFields.id), 1, updateFields);
     this.addLocalSorage();
   }
@@ -58,4 +55,5 @@ export class ProductService {
   addLocalSorage() {
     localStorage.setItem('products', JSON.stringify(this.products));
   }
+  // update lại số lượng sản phẩm
 }

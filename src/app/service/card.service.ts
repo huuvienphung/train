@@ -53,8 +53,11 @@ export class CardService {
     this.addLocalSorage();
   }
   updateCard(card: ICard): void {
-    let index = this.findIndexcard(card.id, this.cards);
-    this.cards.splice(index, 1, card);
+    let newOrder = Object.assign(card, { order: [...this.smallCard] });
+    let index = this.findIndexcard(newOrder.id, this.cards);
+    this.cards.splice(index, 1, newOrder);
+    this.removeAll();
+    this.addLocalSorage();
   }
   // xử lý với small card
   getSmallCards(): Observable<IProduct[]> {
@@ -63,8 +66,12 @@ export class CardService {
   getSmallCard(id: string): Observable<IProduct> {
     return of(this.smallCard.find((c) => c.id === id));
   }
+  setSmallCard(ca: IProduct[]): void {
+    ca.forEach((c) => this.smallCard.push(c));
+  }
   addSmallCard(c: IProduct) {
-    c.quantity.card = 1;
+    c.quantity.card++;
+    c.quantity.product--;
     this.smallCard.push(c);
   }
   deleteSmallCard(id: string) {
@@ -72,6 +79,9 @@ export class CardService {
     this.smallCard.splice(index, 1);
   }
   updateSmallCard(index: number, c: IProduct) {
+    c.quantity.product = c.quantity.total - c.quantity.card;
+    console.log('đã update');
+
     this.smallCard.splice(index, 1, c);
   }
   // các hàm xử lý
