@@ -74,6 +74,7 @@ export class DialogCardComponent implements OnInit {
         phoneNumber: this.addForm.value.phoneNumber,
         order: [],
       };
+
       this.updateQuantity();
       this.cardService.updateCard(updateCard);
     } else {
@@ -83,18 +84,22 @@ export class DialogCardComponent implements OnInit {
         this.addForm.value.phoneNumber,
         []
       );
+
       this.updateQuantity();
       this.cardService.addCard(newCard);
     }
+
     this.addForm.patchValue({
       id: '',
       nameOrder: '',
       nameCustomer: '',
       phoneNumber: '',
     });
+
     this.show = false;
     this.total$ = this.total();
   }
+
   showDialog(id: string) {
     this.show = true;
     if (id !== '1') {
@@ -129,15 +134,17 @@ export class DialogCardComponent implements OnInit {
   changeQuantity(event, product: IProduct) {
     let x: number = event.value;
     // nếu số lượng nhỏ hơn 1 sẽ tính 1
+    console.log(x);
+
     if (event.value < 1) {
       x = 1;
     }
     // nếu số lượng lớn hơn tổng số lượng sản phẩm thì gán chó total
-    if (event.value > product.quantity.total) {
-      x = product.quantity.total;
+    if (event.value > product.quantity.product) {
+      x = product.quantity.product;
     }
     product.quantity.card = x;
-    product.quantity.product = product.quantity.total - x;
+    this.cardService.showSmall();
     this.total$ = this.total();
 
     // this.cardService
@@ -171,7 +178,7 @@ export class DialogCardComponent implements OnInit {
       quantity: new Quantity(0, 0, 0),
     };
     // kiểm tra số lượng sản phẩm còn lại có lớn hơn 0
-    if (item.quantity.product > 0) {
+    if (item.quantity.product - item.quantity.listcard > 0) {
       this.cardService.getSmallCards().subscribe((res) => {
         // tìm vị trí để kiểm tra sản phẩm đã tồn tại trong card chưa
         let index = res.findIndex((car) => car.id === item.id);
@@ -180,7 +187,10 @@ export class DialogCardComponent implements OnInit {
         if (index > -1) {
           newItem = res[index];
           // kiểm tra số sản phẩm trong card phải nhỏ hơn total
-          if (newItem.quantity.card < newItem.quantity.total) {
+          if (
+            newItem.quantity.card <=
+            newItem.quantity.product - newItem.quantity.listcard
+          ) {
             newItem.quantity.card++;
             this.cardService.updateSmallCard(index, newItem);
           } else {
@@ -194,8 +204,8 @@ export class DialogCardComponent implements OnInit {
             description: item.description,
             quantity: new Quantity(
               item.quantity.card,
-              item.quantity.product,
-              item.quantity.total
+              item.quantity.listcard,
+              item.quantity.product
             ),
           };
           this.cardService.addSmallCard(newItem);
@@ -213,6 +223,16 @@ export class DialogCardComponent implements OnInit {
   }
 
   updateQuantity(): void {
+    // cập nhật lại số lượng trong danh sách đơn hàng
+    this.cardService
+      .getSmallCards()
+      .pipe(
+        switchMap((val) => val),
+        tap((val) => (val.quantity.listcard = val.quantity.card)),
+        toArray()
+      )
+      .subscribe();
+    // cập nhật lại số lượng sản phẩm trong từng sản phẩm
     this.productService
       .getProducts()
       .pipe(
@@ -226,24 +246,23 @@ export class DialogCardComponent implements OnInit {
         }),
         toArray()
       )
-      .subscribe();
+      .subscribe((res) => this.productService.setProducts(res));
   }
 
-  filterId(obj: IProduct): IQuantity {
+  filterId(product: IProduct): IQuantity {
     let k: IQuantity;
     merge(
       this.cardService.getSmallCards().pipe(
         switchMap((val) => val),
-        filter((val: IProduct) => val.id === obj.id)
+        filter((val: IProduct) => val.id === product.id)
       )
-    ).subscribe(
-      (res) =>
-        (k = new Quantity(
-          obj.quantity.card + res.quantity.card,
-          obj.quantity.total - (obj.quantity.card + res.quantity.card),
-          obj.quantity.total
-        ))
-    );
+    ).subscribe((res) => {
+      k = new Quantity(
+        0,
+        res.quantity.listcard + product.quantity.listcard,
+        res.quantity.product
+      );
+    });
     return k;
   }
 }

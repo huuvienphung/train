@@ -7,10 +7,10 @@ import { IProduct, Product, Quantity } from '../model/product.model';
 })
 export class ProductService {
   products: Product[] = [
-    new Product('name11111', 1000, 'cc1', new Quantity(0, 2, 2)),
-    new Product('name22222222', 2000, 'cc2', new Quantity(0, 3, 3)),
-    new Product('name33333', 2000, 'cc2', new Quantity(0, 4, 4)),
-    new Product('name4444444', 2000, 'cc2', new Quantity(0, 5, 5)),
+    new Product('name11111', 1000, 'cc1', new Quantity(0, 0, 2)),
+    new Product('name22222222', 2000, 'cc2', new Quantity(0, 0, 3)),
+    new Product('name33333', 2000, 'cc2', new Quantity(0, 0, 4)),
+    new Product('name4444444', 2000, 'cc2', new Quantity(0, 0, 5)),
   ];
 
   constructor() {
@@ -31,6 +31,14 @@ export class ProductService {
   // get one
   getProduct(id: string): Observable<IProduct> {
     return of(this.products.find((p) => p.id === id));
+  }
+  setProducts(items: IProduct[]) {
+    let i = 0;
+    while (i < items.length) {
+      this.products.splice(i, 1, items[i]);
+      i++;
+    }
+    this.addLocalSorage();
   }
   // add item
   addProduct(item: Product) {

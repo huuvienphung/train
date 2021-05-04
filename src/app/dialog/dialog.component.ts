@@ -42,7 +42,7 @@ export class DialogComponent implements OnInit {
         1,
         Validators.compose([Validators.required, Validators.min(1)]),
       ],
-      quantityTotal: [0],
+      quantityListcard: [0],
     });
   }
 
@@ -59,7 +59,7 @@ export class DialogComponent implements OnInit {
         description: product.description,
         quantityCard: product.quantity.card,
         quantityProduct: product.quantity.product,
-        quantityTotal: product.quantity.total,
+        quantityListcard: product.quantity.listcard,
       });
     }
   }
@@ -75,9 +75,7 @@ export class DialogComponent implements OnInit {
         quantity: {
           card: this.addForm.value.quantityCard,
           product: this.addForm.value.quantityProduct,
-          total:
-            this.addForm.value.quantityCard +
-            this.addForm.value.quantityProduct,
+          listcard: this.addForm.value.quantityListcard,
         },
       };
 
@@ -95,11 +93,7 @@ export class DialogComponent implements OnInit {
       this.addForm.value.name,
       this.addForm.value.price,
       this.addForm.value.description,
-      new Quantity(
-        0,
-        this.addForm.value.quantityProduct,
-        this.addForm.value.quantityProduct
-      )
+      new Quantity(0, this.addForm.value.quantityProduct, 0)
     );
 
     this.productService.addProduct(item); // add new item vào service

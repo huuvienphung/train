@@ -99,16 +99,17 @@
                   <p-inputNumber
                     (onInput)="changeQuantity($event, product)"
                     suffix="/{{
-                      product.quantity.product +
-                        (product.quantity.total - product.quantity.product)
+                      product.quantity.product - product.quantity.listcard
                     }} sản phẩm"
-                    ngModel="{{ product.quantity.card }}"
+                    ngModel="{{
+                      product.quantity.card === 0 ? 1 : product.quantity.card
+                    }}"
                     mode="decimal"
                     [showButtons]="true"
                     decrementButtonClass="p-button"
                     incrementButtonClass="p-button"
                     [min]="1"
-                    [max]="product.quantity.total"
+                    [max]="product.quantity.product - product.quantity.listcard"
                   ></p-inputNumber>
                 </td>
                 <td>
@@ -155,7 +156,16 @@
                 Tên sp: <span> {{ item.name }}</span>
               </h3>
               <p>giá: {{ item.price | currency: "VND" }}</p>
-              <p>số lượng còn: {{ item.quantity.product }}</p>
+              <p>
+                quantity:
+                {{ item.quantity.card }}/{{ item.quantity.listcard }}/{{
+                  item.quantity.product
+                }}
+              </p>
+              <p>
+                số lượng còn:
+                {{ item.quantity.product - item.quantity.listcard }}
+              </p>
               <p-button
                 type="button"
                 icon="pi pi-plus"

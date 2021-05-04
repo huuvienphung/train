@@ -2,15 +2,15 @@ import * as uuid from 'uuid';
 
 export interface IQuantity {
   card: number;
+  listcard: number;
   product: number;
-  total: number;
 }
 
 export class Quantity {
   constructor(
     public card: number,
-    public product: number,
-    public total: number
+    public listcard: number,
+    public product: number
   ) {}
 }
 

@@ -22,7 +22,11 @@
           <ng-template pTemplate="body" let-order>
             <tr>
               <td>{{ order.name }}</td>
-              <td>{{ order.quantity.card }}</td>
+              <td>
+                {{ order.quantity.card }}/{{ order.quantity.listcard }}/{{
+                  order.quantity.product
+                }}
+              </td>
               <td>{{ order.price | currency: "VND" }}</td>
               <td>{{ order.price * order.quantity.card | currency: "VND" }}</td>
             </tr>

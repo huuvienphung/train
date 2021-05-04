@@ -1,26 +1,26 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { Card, ICard } from '../model/card.model';
-import { IProduct, Product, Quantity } from '../model/product.model';
+import { ICard } from '../model/card.model';
+import { IProduct } from '../model/product.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CardService {
   cards: ICard[] = [
-    new Card('nameOrder1', 'nameCustomer1', 'phoneNumber1', [
-      new Product('nameProduct1', 10, '', new Quantity(1, 2, 3)),
-      new Product('nameProduct2', 20, '', new Quantity(2, 3, 5)),
-      new Product('nameProduct3', 30, '', new Quantity(3, 4, 7)),
-    ]),
-    new Card('nameOrder2', 'nameCustomer2', 'phoneNumber2', [
-      new Product('nameProduct1', 10, '', new Quantity(1, 2, 3)),
-      new Product('nameProduct2', 20, '', new Quantity(2, 3, 5)),
-    ]),
-    new Card('nameOrder3', 'nameCustomer3', 'phoneNumber3', [
-      new Product('nameProduct1', 10, '', new Quantity(1, 2, 3)),
-      new Product('nameProduct2', 20, '', new Quantity(2, 3, 5)),
-    ]),
+    // new Card('nameOrder1', 'nameCustomer1', 'phoneNumber1', [
+    //   new Product('nameProduct1', 10, '', new Quantity(1, 2, 3)),
+    //   new Product('nameProduct2', 20, '', new Quantity(2, 3, 5)),
+    //   new Product('nameProduct3', 30, '', new Quantity(3, 4, 7)),
+    // ]),
+    // new Card('nameOrder2', 'nameCustomer2', 'phoneNumber2', [
+    //   new Product('nameProduct1', 10, '', new Quantity(1, 2, 3)),
+    //   new Product('nameProduct2', 20, '', new Quantity(2, 3, 5)),
+    // ]),
+    // new Card('nameOrder3', 'nameCustomer3', 'phoneNumber3', [
+    //   new Product('nameProduct1', 10, '', new Quantity(1, 2, 3)),
+    //   new Product('nameProduct2', 20, '', new Quantity(2, 3, 5)),
+    // ]),
   ];
   smallCard: IProduct[] = [
     // new Product('nameProduct1', 10, '', 1),
@@ -73,18 +73,17 @@ export class CardService {
     ca.forEach((c) => this.smallCard.push(c));
   }
   addSmallCard(c: IProduct) {
-    c.quantity.card++;
-    c.quantity.product--;
+    c.quantity.card = 1;
     this.smallCard.push(c);
+    this.showSmall();
   }
   deleteSmallCard(id: string) {
     let index = this.findIndexcard(id, this.smallCard);
     this.smallCard.splice(index, 1);
   }
   updateSmallCard(index: number, c: IProduct) {
-    c.quantity.product = c.quantity.total - c.quantity.card;
+    this.showSmall();
     console.log('đã update');
-
     this.smallCard.splice(index, 1, c);
   }
   // các hàm xử lý
