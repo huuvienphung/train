@@ -73,7 +73,6 @@ export class DialogCardComponent implements OnInit {
         order: [],
       };
 
-      this.updateQuantity();
       this.cardService.updateCard(updateCard);
     } else {
       let newCard = new Card(
@@ -83,7 +82,6 @@ export class DialogCardComponent implements OnInit {
         []
       );
 
-      this.updateQuantity();
       this.cardService.addCard(newCard);
     }
 
@@ -142,7 +140,6 @@ export class DialogCardComponent implements OnInit {
       x = product.quantity.product;
     }
     product.quantity.card = x;
-    this.cardService.showSmall();
     this.total$ = this.total();
 
     // this.cardService

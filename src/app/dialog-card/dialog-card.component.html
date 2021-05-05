@@ -210,12 +210,12 @@
                 Tên sp: <span> {{ item.name }}</span>
               </h3>
               <p>giá: {{ item.price | currency: "VND" }}</p>
-              <p>
+              <!-- <p>
                 quantity:
                 {{ item.quantity.card }}/{{ item.quantity.listcard }}/{{
                   item.quantity.product
                 }}
-              </p>
+              </p> -->
               <p>
                 số lượng còn:
                 {{ item.quantity.product - item.quantity.listcard }}

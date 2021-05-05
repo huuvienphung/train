@@ -34,9 +34,7 @@ export class CardService {
       this.cards = JSON.parse(localStorage.getItem('cards'));
     }
   }
-  showSmall() {
-    console.log(this.smallCard);
-  }
+
   // xử lý với card
   getCards(): Observable<ICard[]> {
     return of(this.cards);
@@ -75,14 +73,12 @@ export class CardService {
   addSmallCard(c: IProduct) {
     c.quantity.card = 1;
     this.smallCard.push(c);
-    this.showSmall();
   }
   deleteSmallCard(id: string) {
     let index = this.findIndexcard(id, this.smallCard);
     this.smallCard.splice(index, 1);
   }
   updateSmallCard(index: number, c: IProduct) {
-    this.showSmall();
     console.log('đã update');
     this.smallCard.splice(index, 1, c);
   }
