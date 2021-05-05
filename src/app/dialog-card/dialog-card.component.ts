@@ -9,8 +9,6 @@ import {
   pluck,
   reduce,
   switchMap,
-  tap,
-  toArray,
 } from 'rxjs/operators';
 import { Card } from '../model/card.model';
 import { IProduct, IQuantity, Quantity } from '../model/product.model';
@@ -188,7 +186,7 @@ export class DialogCardComponent implements OnInit {
           newItem = res[index];
           // kiểm tra số sản phẩm trong card phải nhỏ hơn total
           if (
-            newItem.quantity.card <=
+            newItem.quantity.card <
             newItem.quantity.product - newItem.quantity.listcard
           ) {
             newItem.quantity.card++;
@@ -224,32 +222,35 @@ export class DialogCardComponent implements OnInit {
 
   updateQuantity(): void {
     // cập nhật lại số lượng trong danh sách đơn hàng
-    this.cardService
-      .getSmallCards()
-      .pipe(
-        switchMap((val) => val),
-        tap((val) => (val.quantity.listcard = val.quantity.card)),
-        toArray()
-      )
-      .subscribe();
+    // this.cardService
+    //   .getSmallCards()
+    //   .pipe(
+    //     switchMap((val) => val),
+    //     tap(
+    //       (val) =>
+    //         (val.quantity.listcard = val.quantity.listcard + val.quantity.card)
+    //     ),
+    //     toArray()
+    //   )
+    //   .subscribe();
     // cập nhật lại số lượng sản phẩm trong từng sản phẩm
-    this.productService
-      .getProducts()
-      .pipe(
-        switchMap((val) => val),
-        tap((val) => {
-          if (this.filterId(val) != undefined) {
-            val.quantity = this.filterId(val);
-          } else {
-            val.quantity = val.quantity;
-          }
-        }),
-        toArray()
-      )
-      .subscribe((res) => this.productService.setProducts(res));
+    // this.productService
+    //   .getProducts()
+    //   .pipe(
+    //     switchMap((val) => val),
+    //     tap((val) => {
+    //       if (this.filterUpdateQuantity(val) != undefined) {
+    //         val.quantity = this.filterUpdateQuantity(val);
+    //       } else {
+    //         val.quantity = val.quantity;
+    //       }
+    //     }),
+    //     toArray()
+    //   )
+    //   .subscribe((res) => this.productService.setProducts(res));
   }
 
-  filterId(product: IProduct): IQuantity {
+  filterUpdateQuantity(product: IProduct): IQuantity {
     let k: IQuantity;
     merge(
       this.cardService.getSmallCards().pipe(
@@ -257,11 +258,7 @@ export class DialogCardComponent implements OnInit {
         filter((val: IProduct) => val.id === product.id)
       )
     ).subscribe((res) => {
-      k = new Quantity(
-        0,
-        res.quantity.listcard + product.quantity.listcard,
-        res.quantity.product
-      );
+      k = new Quantity(0, res.quantity.listcard, product.quantity.product);
     });
     return k;
   }

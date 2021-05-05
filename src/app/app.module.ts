@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -8,11 +9,13 @@ import { CardModule } from 'primeng/card';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
+import { FileUploadModule } from 'primeng/fileupload';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { MenuModule } from 'primeng/menu';
 import { MenubarModule } from 'primeng/menubar';
+import { MessageModule } from 'primeng/message';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
@@ -55,6 +58,9 @@ import { ViewProductComponent } from './view-product/view-product.component';
     ConfirmDialogModule,
     InputNumberModule,
     DynamicDialogModule,
+    FileUploadModule,
+    HttpClientModule,
+    MessageModule,
   ],
   providers: [AppComponent],
   bootstrap: [AppComponent],

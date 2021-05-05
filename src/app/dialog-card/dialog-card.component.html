@@ -45,6 +45,22 @@
                 />
                 <label for="inputNameOrder">Điền tên đơn hàng</label>
               </span>
+              <!-- lỗi -->
+              <div
+                *ngIf="
+                  addForm.get('nameOrder').invalid &&
+                  (addForm.get('nameOrder').dirty ||
+                    addForm.get('nameOrder').touched)
+                "
+              >
+                <span *ngIf="addForm.get('nameOrder').errors.required">
+                  <p-message
+                    severity="warn"
+                    styleClass="p-mt-2"
+                    text="tên đơn hàng không được để trống"
+                  ></p-message>
+                </span>
+              </div>
             </div>
             <div class="p-field p-col-12">
               <span class="p-float-label">
@@ -56,6 +72,22 @@
                 />
                 <label for="inputNameCustomer">Điền tên khách hàng</label>
               </span>
+              <!-- lỗi -->
+              <div
+                *ngIf="
+                  addForm.get('nameCustomer').invalid &&
+                  (addForm.get('nameCustomer').dirty ||
+                    addForm.get('nameCustomer').touched)
+                "
+              >
+                <span *ngIf="addForm.get('nameCustomer').errors.required">
+                  <p-message
+                    severity="warn"
+                    styleClass="p-mt-2"
+                    text="tên khách hàng không được để trống"
+                  ></p-message>
+                </span>
+              </div>
             </div>
             <div class="p-field p-col-12">
               <span class="p-float-label">
@@ -67,6 +99,22 @@
                 />
                 <label for="inputPhone">Điền số điện thoại</label>
               </span>
+              <!-- lỗi -->
+              <div
+                *ngIf="
+                  addForm.get('phoneNumber').invalid &&
+                  (addForm.get('phoneNumber').dirty ||
+                    addForm.get('phoneNumber').touched)
+                "
+              >
+                <span *ngIf="addForm.get('phoneNumber').errors.required">
+                  <p-message
+                    severity="warn"
+                    styleClass="p-mt-2"
+                    text="số điện thoại không được để trống"
+                  ></p-message>
+                </span>
+              </div>
             </div>
           </div>
           <!-- <pre>{{ addForm.value | json }}</pre> -->
@@ -86,6 +134,7 @@
               <tr>
                 <th>Tên Sản phẩm</th>
                 <th>giá 1/sp</th>
+                <!-- <th>test</th> -->
                 <th>Số lượng</th>
                 <th>thành tiền</th>
                 <th>thao tác</th>
@@ -95,6 +144,11 @@
               <tr>
                 <td>{{ product.name }}</td>
                 <td>{{ product.price | currency: "VND" }}</td>
+                <!-- <td>
+                  ({{ product.quantity.card }})/{{
+                    product.quantity.listcard
+                  }}/{{ product.quantity.product }}
+                </td> -->
                 <td>
                   <p-inputNumber
                     (onInput)="changeQuantity($event, product)"

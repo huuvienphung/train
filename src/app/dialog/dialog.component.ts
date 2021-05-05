@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
@@ -13,25 +14,22 @@ import { ProductService } from '../service/product.service';
 export class DialogComponent implements OnInit {
   show: boolean;
   addForm: FormGroup;
+  url = '';
+  selectedFile: File = null;
 
   constructor(
     private productService: ProductService,
     private fb: FormBuilder,
     private primengConfig: PrimeNGConfig,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
     this.primengConfig.ripple = true;
     this.addForm = this.fb.group({
       id: [''],
-      name: [
-        '',
-        Validators.compose([
-          Validators.required,
-          // Validators.pattern(/^[a-z]{6,32}$/i),
-        ]),
-      ],
+      name: ['', Validators.compose([Validators.required])],
       price: [
         1000,
         Validators.compose([Validators.required, Validators.min(1000)]),
@@ -44,6 +42,26 @@ export class DialogComponent implements OnInit {
       ],
       quantityListcard: [0],
     });
+  }
+  onSelectfile(e) {
+    if (e.target.files) {
+      this.selectedFile = <File>e.target.files[0];
+    }
+  }
+  onUpload() {
+    if (this.selectedFile) {
+      let reader = new FileReader();
+      reader.readAsDataURL(this.selectedFile);
+      reader.onload = (event: any) => {
+        this.url = event.target.result;
+      };
+      const fd = new FormData();
+      fd.append('image', this.selectedFile, this.selectedFile.name);
+
+      this.http.post('http://localhost:4200/assets', fd).subscribe((res) => {
+        console.log(res);
+      });
+    }
   }
 
   // show dialog create or update
@@ -58,8 +76,8 @@ export class DialogComponent implements OnInit {
         price: product.price,
         description: product.description,
         quantityCard: product.quantity.card,
-        quantityProduct: product.quantity.product,
         quantityListcard: product.quantity.listcard,
+        quantityProduct: product.quantity.product,
       });
     }
   }
@@ -74,11 +92,10 @@ export class DialogComponent implements OnInit {
         description: this.addForm.value.description,
         quantity: {
           card: this.addForm.value.quantityCard,
-          product: this.addForm.value.quantityProduct,
           listcard: this.addForm.value.quantityListcard,
+          product: this.addForm.value.quantityProduct,
         },
       };
-
       this.productService.updateProduct(item);
     } else {
       this.add();
@@ -93,7 +110,7 @@ export class DialogComponent implements OnInit {
       this.addForm.value.name,
       this.addForm.value.price,
       this.addForm.value.description,
-      new Quantity(0, this.addForm.value.quantityProduct, 0)
+      new Quantity(0, 0, this.addForm.value.quantityProduct)
     );
 
     this.productService.addProduct(item); // add new item vào service

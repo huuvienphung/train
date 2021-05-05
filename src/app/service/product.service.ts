@@ -38,7 +38,7 @@ export class ProductService {
       this.products.splice(i, 1, items[i]);
       i++;
     }
-    this.addLocalSorage();
+    // this.addLocalSorage();
   }
   // add item
   addProduct(item: Product) {

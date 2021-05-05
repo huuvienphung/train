@@ -11,6 +11,8 @@
   [(visible)]="show"
   blockScroll="true"
   closeOnEscape="true"
+  [maximizable]="true"
+  [resizable]="false"
   modal="true"
   [style]="{ width: '70vw' }"
   [baseZIndex]="10000"
@@ -19,11 +21,41 @@
     <div class="p-fluid p-grid p-my-5">
       <div class="p-field p-col-12 p-md-12">
         <span class="p-float-label">
+          <img [src]="url" alt="" height="200" />
+          <input pInputText type="file" (change)="onSelectfile($event)" />
+        </span>
+        <span class="p-float-label p-mt-3">
+          <p-button
+            type="button"
+            label="Upload"
+            (click)="onUpload()"
+          ></p-button>
+        </span>
+      </div>
+      <!-- start nhập name -->
+      <div class="p-field p-col-12 p-md-12">
+        <span class="p-float-label">
           <input type="text" id="inputName" pInputText formControlName="name" />
           <label for="inputName">Fill Tên</label>
         </span>
-        <!-- <p>{{ addForm.get("name")?.errors | json }}</p> -->
+        <!-- lỗi -->
+        <div
+          *ngIf="
+            addForm.get('name').invalid &&
+            (addForm.get('name').dirty || addForm.get('name').touched)
+          "
+        >
+          <span *ngIf="addForm.get('name').errors.required">
+            <p-message
+              severity="warn"
+              styleClass="p-mt-2"
+              text="tên không được để trống"
+            ></p-message>
+          </span>
+        </div>
       </div>
+      <!--end nhập name -->
+      <!-- start nhập giá -->
       <div class="p-field p-col-12 p-md-6">
         <span class="p-float-label">
           <p-inputNumber
@@ -35,7 +67,9 @@
           ></p-inputNumber>
           <label for="inputPrice">Fill Giá > 1000</label>
         </span>
-        <!-- <p>{{ addForm.get("price")?.errors | json }}</p> -->
+        <!-- lỗi -->
+
+        <!-- end nhập giá -->
       </div>
       <div class="p-field p-col-12 p-md-6">
         <span class="p-float-label">
@@ -45,7 +79,7 @@
             formControlName="quantityProduct"
             decrementButtonClass="p-button"
             incrementButtonClass="p-button"
-            :min="1"
+            [min]="1"
           ></p-inputNumber>
           <label for="inputQuan">Fill Số lượng > 0</label>
         </span>
