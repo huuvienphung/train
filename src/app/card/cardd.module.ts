@@ -17,13 +17,19 @@ import { MessageModule } from 'primeng/message';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
+import { FormatPhonePipe } from '../pipe/format-phone.pipe';
 import { CardRoutingModule } from './card-routing.module';
 import { DialogCardComponent } from './dialog-card/dialog-card.component';
 import { ListCardComponent } from './list-card/list-card.component';
 import { ViewCardComponent } from './view-card/view-card.component';
 
 @NgModule({
-  declarations: [DialogCardComponent, ListCardComponent, ViewCardComponent],
+  declarations: [
+    DialogCardComponent,
+    ListCardComponent,
+    ViewCardComponent,
+    FormatPhonePipe,
+  ],
   imports: [
     CommonModule,
     DialogModule,
