@@ -10,10 +10,10 @@ import {
   reduce,
   switchMap,
 } from 'rxjs/operators';
-import { Card } from '../model/card.model';
-import { IProduct, IQuantity, Quantity } from '../model/product.model';
-import { CardService } from '../service/card.service';
-import { ProductService } from '../service/product.service';
+import { Card } from '../../model/card.model';
+import { IProduct, IQuantity, Quantity } from '../../model/product.model';
+import { CardService } from '../../service/card.service';
+import { ProductService } from '../../service/product.service';
 
 @Component({
   selector: 'app-dialog-card',
@@ -85,13 +85,7 @@ export class DialogCardComponent implements OnInit {
       this.cardService.addCard(newCard);
     }
 
-    this.addForm.patchValue({
-      id: '',
-      nameOrder: '',
-      nameCustomer: '',
-      phoneNumber: '',
-    });
-
+    this.addForm.reset();
     this.show = false;
     this.total$ = this.total();
   }
@@ -115,12 +109,7 @@ export class DialogCardComponent implements OnInit {
   cancel() {
     this.show = false;
     this.cardService.removeAll();
-    this.addForm.patchValue({
-      id: '',
-      nameOrder: '',
-      nameCustomer: '',
-      phoneNumber: '',
-    });
+    this.addForm.reset();
     this.total$ = this.total();
   }
   delete(id: string) {

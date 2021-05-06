@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import {
   ConfirmationService,
   ConfirmEventType,
@@ -21,17 +20,12 @@ export class ListProductComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
-    private router: Router,
     private confirmationService: ConfirmationService,
     private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
     this.products$ = this.productService.getProducts();
-  }
-
-  viewProduct(id: string) {
-    this.router.navigate(['/view/' + id]);
   }
 
   deleteProduct(id: string) {

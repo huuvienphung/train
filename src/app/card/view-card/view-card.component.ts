@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { pluck, reduce, switchMap } from 'rxjs/operators';
-import { ICard } from '../model/card.model';
-import { CardService } from '../service/card.service';
+import { ICard } from '../../model/card.model';
+import { CardService } from '../../service/card.service';
 
 @Component({
   selector: 'app-view-card',
@@ -16,8 +16,7 @@ export class ViewCardComponent implements OnInit {
 
   constructor(
     private cardService: CardService,
-    private route: ActivatedRoute,
-    private router: Router
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -30,8 +29,5 @@ export class ViewCardComponent implements OnInit {
       switchMap((val) => val.order),
       reduce((acc, value, index) => acc + value.price * value.quantity.card, 0)
     );
-  }
-  back() {
-    this.router.navigate(['list-card']);
   }
 }

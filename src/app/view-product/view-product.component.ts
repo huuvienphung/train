@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { pluck } from 'rxjs/operators';
 import { IProduct } from '../model/product.model';
@@ -16,7 +16,6 @@ export class ViewProductComponent implements OnInit {
   addForm: FormGroup;
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private productService: ProductService,
     private fb: FormBuilder
   ) {}
@@ -30,8 +29,5 @@ export class ViewProductComponent implements OnInit {
       id = res;
     });
     this.product$ = this.productService.getProduct(id);
-  }
-  back() {
-    this.router.navigate(['/']);
   }
 }

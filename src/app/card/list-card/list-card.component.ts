@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import {
   ConfirmationService,
   ConfirmEventType,
@@ -7,8 +6,8 @@ import {
 } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Observable } from 'rxjs';
-import { ICard } from '../model/card.model';
-import { CardService } from '../service/card.service';
+import { ICard } from '../../model/card.model';
+import { CardService } from '../../service/card.service';
 
 @Component({
   selector: 'app-list-card',
@@ -21,7 +20,6 @@ export class ListCardComponent implements OnInit {
 
   constructor(
     private cardService: CardService,
-    private router: Router,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     public dialogService: DialogService
@@ -29,9 +27,6 @@ export class ListCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.listCards$ = this.cardService.getCards();
-  }
-  viewCard(id: string): void {
-    this.router.navigate(['view-card/' + id]);
   }
 
   delete(id: string): void {

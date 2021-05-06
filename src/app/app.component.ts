@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { MenuItem, MessageService, PrimeNGConfig } from 'primeng/api';
 
 @Component({
@@ -14,7 +13,7 @@ export class AppComponent {
 
   lists: number[];
 
-  constructor(private primengConfig: PrimeNGConfig, private router: Router) {}
+  constructor(private primengConfig: PrimeNGConfig) {}
 
   ngOnInit() {
     this.primengConfig.ripple = true;
@@ -22,16 +21,12 @@ export class AppComponent {
       {
         label: 'Home',
         icon: 'pi pi-pw pi-home',
-        command: () => {
-          this.router.navigate(['/']);
-        },
+        routerLink: '/',
       },
       {
         label: 'Card',
         icon: 'pi pi-pw pi-shopping-cart',
-        command: () => {
-          this.router.navigate(['list-card']);
-        },
+        routerLink: '/list-card',
       },
     ];
   }

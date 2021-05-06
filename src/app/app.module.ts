@@ -21,11 +21,11 @@ import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { DialogCardComponent } from './dialog-card/dialog-card.component';
+import { DialogCardComponent } from './card/dialog-card/dialog-card.component';
+import { ListCardComponent } from './card/list-card/list-card.component';
+import { ViewCardComponent } from './card/view-card/view-card.component';
 import { DialogComponent } from './dialog/dialog.component';
-import { ListCardComponent } from './list-card/list-card.component';
 import { ListProductComponent } from './list-product/list-product.component';
-import { ViewCardComponent } from './view-card/view-card.component';
 import { ViewProductComponent } from './view-product/view-product.component';
 
 @NgModule({

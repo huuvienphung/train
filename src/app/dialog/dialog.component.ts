@@ -122,13 +122,7 @@ export class DialogComponent implements OnInit {
   }
   // set lại rỗng cho form
   cleanForm() {
-    this.addForm.patchValue({
-      id: '',
-      name: '',
-      price: 0,
-      quantity: 1,
-      description: '',
-    });
+    this.addForm.reset();
   }
   showSuccess() {
     this.messageService.add({
