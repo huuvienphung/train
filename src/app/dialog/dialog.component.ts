@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
@@ -21,8 +20,7 @@ export class DialogComponent implements OnInit {
     private productService: ProductService,
     private fb: FormBuilder,
     private primengConfig: PrimeNGConfig,
-    private messageService: MessageService,
-    private http: HttpClient
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -43,26 +41,26 @@ export class DialogComponent implements OnInit {
       quantityListcard: [0],
     });
   }
-  onSelectfile(e) {
-    if (e.target.files) {
-      this.selectedFile = <File>e.target.files[0];
-    }
-  }
-  onUpload() {
-    if (this.selectedFile) {
-      let reader = new FileReader();
-      reader.readAsDataURL(this.selectedFile);
-      reader.onload = (event: any) => {
-        this.url = event.target.result;
-      };
-      const fd = new FormData();
-      fd.append('image', this.selectedFile, this.selectedFile.name);
+  // onSelectfile(e) {
+  //   if (e.target.files) {
+  //     this.selectedFile = <File>e.target.files[0];
+  //   }
+  // }
+  // onUpload() {
+  //   if (this.selectedFile) {
+  //     let reader = new FileReader();
+  //     reader.readAsDataURL(this.selectedFile);
+  //     reader.onload = (event: any) => {
+  //       this.url = event.target.result;
+  //     };
+  //     const fd = new FormData();
+  //     fd.append('image', this.selectedFile, this.selectedFile.name);
 
-      this.http.post('http://localhost:4200/assets', fd).subscribe((res) => {
-        console.log(res);
-      });
-    }
-  }
+  //     this.http.post('http://localhost:4200/assets', fd).subscribe((res) => {
+  //       console.log(res);
+  //     });
+  //   }
+  // }
 
   // show dialog create or update
   showDialog(id: string) {
