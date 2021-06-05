@@ -23,7 +23,6 @@ export class FormatPhonePipe implements PipeTransform {
       }
       str = str3.concat(str2);
     }
-    console.log(str);
     return str;
   }
 }
